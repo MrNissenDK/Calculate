@@ -1,0 +1,63 @@
+﻿@page "/"
+@rendermode InteractiveServer
+
+<PageTitle>Home</PageTitle>
+
+<form @onsubmit="Calculate" class="d-grid gap-3">
+	<div class="form-group">
+		<div class="form-floating">
+			 <input type="string" class="form-control" id="CalculationString" @bind="CalculationString" placeholder="..."/>
+			<label for="CalculationString">What should I calculate for you</label
+		</div>
+	 </div>
+	 <div class="form-group">
+		 <button type="submit" class="btn btn-primary">Calculate</button>
+	 </div>
+</form>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>Calculation</th>
+		</tr>
+	</thead>
+	<tbody>
+		@for(int i = 0; i < Calculation.Count; i++)
+		{
+			<tr>
+				<td>@i</td>
+				<td>@Calculation[i]</td>
+			</tr>
+		}
+	</tbody>
+	<tfoot>
+		<tr>
+			<td>Result</td>
+			<td>@CalculationResult</td>
+		</tr
+	</tfoot>
+</table>
+
+@code {
+	private string CalculationString { get; set; }
+	private List<string> Calculation { get; set; }
+	private string CalculationResult { get; set; }
+
+	protected override void OnInitialized()
+	{
+		CalculationString = string.Empty;
+		Calculation = new List<string>();
+		CalculationResult = string.Empty;
+	}
+
+	private void Calculate()
+	{
+		var calculation = new Classes.Calculation(CalculationString);
+		calculation.Run();
+		Calculation = calculation.Calculations;
+		CalculationResult = calculation.Result;
+		CalculationString = string.Empty;
+		StateHasChanged();
+	}
+}
